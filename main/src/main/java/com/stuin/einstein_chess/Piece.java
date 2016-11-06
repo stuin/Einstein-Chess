@@ -16,10 +16,9 @@ class Piece {
 
     private boolean moved = false;
     private TextView[][] board;
-    Game game;
 
     void showPosition(boolean end) {
-            board = game.board;
+            board = Game.board;
             TextView t = board[x][y];
             switch(type) {
                 case 1:
@@ -63,7 +62,7 @@ class Piece {
     private TextView.OnClickListener selectListener = new TextView.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(black == game.blackTurn) {
+            if(black == Game.blackTurn) {
                 List<Point> moves = new ArrayList<>();
                 boolean moving = true;
                 int dir = 1;
@@ -150,7 +149,7 @@ class Piece {
                     } else remove.add(p);
                 moves.removeAll(remove);
 
-                game.setBoard();
+                Game.setBoard();
                 for(Point p : moves) {
                     if(board[p.x][p.y].length() == 0) board[p.x][p.y].setBackgroundColor(Color.GREEN);
                     else board[p.x][p.y].setBackgroundColor(Color.RED);
@@ -179,18 +178,18 @@ class Piece {
             y = i / 8;
             moved = true;
 
-            if(game.einstein && type > 1) {
+            if(Game.einstein && type > 1) {
                 if(type > 2) type--;
                 else type = 6;
             }
 
             if(board[x][y].length() != 0) {
-                for(int j = 0; j < game.set.length; j++) if(game.set[j].i == i && game.set[j].black != black) game.set[j].type = 0;
-                game.win = board[x][y].getText().equals("K");
+                for(int j = 0; j < Game.set.length; j++) if(Game.set[j].i == i && Game.set[j].black != black) Game.set[j].type = 0;
+                Game.win = board[x][y].getText().equals("K");
             }
 
-            game.blackTurn = !game.blackTurn;
-            game.setBoard();
+            Game.blackTurn = !Game.blackTurn;
+            Game.setBoard();
         }
     };
 
@@ -200,16 +199,16 @@ class Piece {
             i = view.getId();
             int nX = i % 8;
 
-            if(nX < x) for(Piece p : game.set) if(p.i == i - 1)  {
+            if(nX < x) for(Piece p : Game.set) if(p.i == i - 1)  {
                 p.x = 2;
                 moved = true;
-                if(game.einstein) p.type = 4;
+                if(Game.einstein) p.type = 4;
             }
 
-            if(nX > x) for(Piece p : game.set) if(p.i == i + 1)  {
+            if(nX > x) for(Piece p : Game.set) if(p.i == i + 1)  {
                 p.x = 5;
                 moved = true;
-                if(game.einstein) p.type = 4;
+                if(Game.einstein) p.type = 4;
             }
 
             moveListener.onClick(view);

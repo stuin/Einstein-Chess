@@ -8,22 +8,25 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 
 public class Game extends Activity {
-    TextView[][] board = new TextView[8][8];
-    Piece[] set;
-    boolean blackTurn = false;
-    boolean win = false;
-    boolean einstein = false;
+    static TextView[][] board = new TextView[8][8];
+    static Piece[] set;
+    static boolean blackTurn = false;
+    static boolean win = false;
+    static boolean einstein = false;
+
+    private static TextView textView;
+    private static String[] s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         if(getActionBar() != null) getActionBar().hide();
+        textView = (TextView) findViewById(R.id.Turn);
+        s = getResources().getStringArray(R.array.game_point);
     }
 
-    void setBoard() {
-        TextView textView = (TextView) findViewById(R.id.Turn);
-        String[] s = getResources().getStringArray(R.array.game_point);
+    static void setBoard() {
         if(blackTurn) textView.setText(s[0]);
         else textView.setText(s[1]);
         boolean black = true;
@@ -133,7 +136,6 @@ public class Game extends Activity {
 
             set[i] = p;
             i++;
-            p.game = this;
         }
         setBoard();
     }
