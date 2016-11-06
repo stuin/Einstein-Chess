@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 public class Game extends Activity {
     TextView[][] board = new TextView[8][8];
-    private Piece[] set;
+    Piece[] set;
     boolean blackTurn = false;
     boolean win = false;
     boolean einstein = false;
@@ -18,12 +18,14 @@ public class Game extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        if(getActionBar() != null) getActionBar().hide();
     }
 
     void setBoard() {
         TextView textView = (TextView) findViewById(R.id.Turn);
-        if(blackTurn) textView.setText("Black's Turn");
-        else textView.setText("White's Turn");
+        String[] s = getResources().getStringArray(R.array.game_point);
+        if(blackTurn) textView.setText(s[0]);
+        else textView.setText(s[1]);
         boolean black = true;
         for(TextView[] l : board) {
             black = !black;
@@ -35,16 +37,38 @@ public class Game extends Activity {
                 t.setOnClickListener(null);
             }
         }
-        for(Piece p : set) p.showPosition();
-        blackTurn = !blackTurn;
+        if(win) {
+            if(blackTurn) textView.setText(s[2]);
+            else textView.setText(s[3]);
+        }
+        for(Piece p : set) p.showPosition(win);
+    }
+
+    @Override
+    public void onBackPressed() {
+        einstein = false;
+        win = false;
+        blackTurn = false;
+
+        findViewById(R.id.Normal).setVisibility(View.VISIBLE);
+        findViewById(R.id.Einstein).setVisibility(View.VISIBLE);
+
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.ChessBoard);
+        gridLayout.removeAllViewsInLayout();
+
+        String s = getResources().getString(R.string.app_name);
+        TextView textView = (TextView) findViewById(R.id.Turn);
+        textView.setText(s);
     }
 
     public void makeBoard(View view) {
         if(view.getId() == R.id.Einstein) einstein = true;
+        findViewById(R.id.Normal).setVisibility(View.GONE);
+        findViewById(R.id.Einstein).setVisibility(View.GONE);
 
         int scale = findViewById(R.id.Relative).getHeight();
         if(scale < findViewById(R.id.Relative).getWidth()) scale = findViewById(R.id.Relative).getWidth();
-        scale = scale / 9;
+        scale = scale / 14;
 
         boolean black = true;
         GridLayout gridLayout = (GridLayout) findViewById(R.id.ChessBoard);
@@ -89,10 +113,12 @@ public class Game extends Activity {
                         p.type = 4;
                         break;
                     case 3:
-                        p.type = 2;
+                        if(y == 7) p.type = 1;
+                        else p.type = 2;
                         break;
                     case 4:
-                        p.type = 1;
+                        if(y == 0) p.type = 1;
+                        else p.type = 2;
                         break;
                 }
             }

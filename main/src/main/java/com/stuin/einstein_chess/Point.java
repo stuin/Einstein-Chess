@@ -1,9 +1,9 @@
 package com.stuin.einstein_chess;
 
-public class Point {
+class Point {
     int x;
     int y;
-    public Point(int x, int y) {
+    Point(int x, int y) {
         this.x = x;
         this.y = y;
     }

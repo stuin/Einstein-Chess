@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Quantum-Chess</string>
+    <string name="app_name">Einstein Chess</string>
+    <string name="game_norm">Normal</string>
+    <string name="game_alt">Alternate</string>
+    <string-array name="game_point">
+        <item>Black Turn</item>
+        <item>White Turn</item>
+        <item>White Wins</item>
+        <item>Black Wins</item>
+    </string-array>
 </resources>
