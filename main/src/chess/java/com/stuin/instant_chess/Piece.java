@@ -164,17 +164,19 @@ class Piece {
                 }
 
                 if(type == 1 && !moved) {
-                    if(board[1][y].length() == 0 && board[2][y].length() == 0 && (!black || (black && board[3][y].length() == 0))) {
-                        board[1][y].setBackgroundColor(Color.GREEN);
+                    i = view.getId();
+                    if(black) i--;
+                    if(board[1][y].length() == 0 && board[2][y].length() == 0 && (!black || (black && board[3][y].length() == 0))) for(Piece p : game.set) if(p.i == i - 3 && !p.moved) {
+                        board[1][y].setBackgroundColor(Color.BLUE);
                         board[1][y].setOnClickListener(castleListener);
                     }
-                    if(board[6][y].length() == 0 && board[5][y].length() == 0 && (black || (!black && board[4][y].length() == 0))) {
-                        board[6][y].setBackgroundColor(Color.GREEN);
+                    if(board[6][y].length() == 0 && board[5][y].length() == 0 && (black || (!black && board[4][y].length() == 0))) for(Piece p : game.set) if(p.i == i + 4 && !p.moved) {
+                        board[6][y].setBackgroundColor(Color.BLUE);
                         board[6][y].setOnClickListener(castleListener);
                     }
                 }
 
-                if((y == 7 && black) || (y == 0 && !black)) {
+                if(type == 6 && ((y == 7 && black) || (y == 0 && !black))) {
                     view.setOnClickListener(promoteListener);
                     view.setBackgroundColor(Color.CYAN);
                 }
@@ -207,17 +209,15 @@ class Piece {
             i = view.getId();
             int nX = i % 8;
 
-            if(nX < x) for(Piece p : game.set)
-                if(p.i == i - 1) {
-                    p.x = 2;
-                    moved = true;
-                }
+            if(nX < x) for(Piece p : game.set) if(p.i == i - 1) {
+                p.x = 2;
+                moved = true;
+            }
 
-            if(nX > x) for(Piece p : game.set)
-                if(p.i == i + 1) {
-                    p.x = 5;
-                    moved = true;
-                }
+            if(nX > x) for(Piece p : game.set) if(p.i == i + 1) {
+                p.x = 5;
+                moved = true;
+            }
 
             moveListener.onClick(view);
         }
