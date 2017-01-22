@@ -1,4 +1,4 @@
-package com.stuin.einstein_chess;
+package com.stuin.instant_chess;
 
 import android.graphics.Color;
 import android.view.View;
@@ -16,43 +16,48 @@ class Piece {
 
     private boolean moved = false;
     private TextView[][] board;
+    private Game game;
+
+    Piece(Game nGame) {
+        game = nGame;
+    }
 
     void showPosition(boolean end) {
-            board = Game.board;
-            TextView t = board[x][y];
-            switch(type) {
-                case 1:
-                    t.setText("K");
-                    break;
-                case 2:
-                    t.setText("Q");
-                    break;
-                case 3:
-                    t.setText("R");
-                    break;
-                case 4:
-                    t.setText("B");
-                    break;
-                case 5:
-                    t.setText("N");
-                    break;
-                case 6:
-                    t.setText("P");
-                    break;
+        board = game.board;
+        TextView t = board[x][y];
+        switch(type) {
+            case 1:
+                t.setText("K");
+                break;
+            case 2:
+                t.setText("Q");
+                break;
+            case 3:
+                t.setText("R");
+                break;
+            case 4:
+                t.setText("B");
+                break;
+            case 5:
+                t.setText("N");
+                break;
+            case 6:
+                t.setText("P");
+                break;
+        }
+
+        if(type != 0) {
+            if(black) {
+                t.setBackgroundColor(Color.DKGRAY);
+                t.setTextColor(Color.BLACK);
+            } else {
+                t.setBackgroundColor(Color.LTGRAY);
+                t.setTextColor(Color.WHITE);
             }
 
-            if(type != 0) {
-                if (black) {
-                    t.setBackgroundColor(Color.DKGRAY);
-                    t.setTextColor(Color.BLACK);
-                } else {
-                    t.setBackgroundColor(Color.LTGRAY);
-                    t.setTextColor(Color.WHITE);
-                }
-
-                i = t.getId();
-                if (!end) t.setOnClickListener(selectListener);
-            }
+            i = t.getId();
+            if(!end) t.setOnClickListener(selectListener);
+        }
     }
 
     private boolean contains(int x, int y) {
@@ -62,14 +67,14 @@ class Piece {
     private TextView.OnClickListener selectListener = new TextView.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(black == Game.blackTurn) {
+            if(black == game.blackTurn) {
                 List<Point> moves = new ArrayList<>();
                 boolean moving = true;
                 int dir = 1;
                 while(dir != 0) {
                     int nX = x;
                     int nY = y;
-                    switch (type) {
+                    switch(type) {
                         case 1:
                             //King
                             moves.add(new Point(nX + dir, nY + dir));
@@ -80,37 +85,37 @@ class Piece {
                         case 2:
                         case 3:
                             //Queen & Rook
-                            while (contains(nX, nY) && moving) {
+                            while(contains(nX, nY) && moving) {
                                 nX += dir;
                                 moves.add(new Point(nX, nY));
-                                if (contains(nX, nY) && board[nX][nY].getText().length() != 0) moving = false;
+                                if(contains(nX, nY) && board[nX][nY].getText().length() != 0) moving = false;
                             }
                             nX = x;
                             moving = true;
-                            while (contains(nX, nY) && moving) {
+                            while(contains(nX, nY) && moving) {
                                 nY += dir;
                                 moves.add(new Point(nX, nY));
-                                if (contains(nX, nY) && board[nX][nY].length() != 0) moving = false;
+                                if(contains(nX, nY) && board[nX][nY].length() != 0) moving = false;
                             }
                             nY = y;
                             moving = true;
-                            if (type == 3) break;
+                            if(type == 3) break;
                         case 4:
                             //Bishop
-                            while (contains(nX, nY) && moving) {
+                            while(contains(nX, nY) && moving) {
                                 nX += dir;
                                 nY += dir;
                                 moves.add(new Point(nX, nY));
-                                if (contains(nX, nY) && board[nX][nY].length() != 0) moving = false;
+                                if(contains(nX, nY) && board[nX][nY].length() != 0) moving = false;
                             }
                             nX = x;
                             nY = y;
                             moving = true;
-                            while (contains(nX, nY) && moving) {
+                            while(contains(nX, nY) && moving) {
                                 nX -= dir;
                                 nY += dir;
                                 moves.add(new Point(nX, nY));
-                                if (contains(nX, nY) && board[nX][nY].length() != 0) moving = false;
+                                if(contains(nX, nY) && board[nX][nY].length() != 0) moving = false;
                             }
                             moving = true;
                             break;
@@ -123,20 +128,22 @@ class Piece {
                             break;
                         case 6:
                             //Pawn
-                            if (black) nY++;
+                            if(black) nY++;
                             else nY--;
-                            if (board[nX][nY].length() == 0 && dir == 1) {
-                                moves.add(new Point(nX, nY));
-                                if (board[nX][nY + 1].length() == 0 && !moved && black)
-                                    moves.add(new Point(nX, nY + 1));
-                                if (board[nX][nY - 1].length() == 0 && !moved && !black)
-                                    moves.add(new Point(nX, nY - 1));
+                            if(contains(x, nY)) {
+                                if(board[nX][nY].length() == 0 && dir == 1) {
+                                    moves.add(new Point(nX, nY));
+                                    if(!moved && black && board[nX][nY + 1].length() == 0)
+                                        moves.add(new Point(nX, nY + 1));
+                                    if(!moved && !black && board[nX][nY - 1].length() == 0)
+                                        moves.add(new Point(nX, nY - 1));
+                                }
+                                if(contains(nX + dir, nY) && board[nX + dir][nY].length() != 0)
+                                    moves.add(new Point(nX + dir, nY));
                             }
-                            if (contains(nX + dir, nY) && board[nX + dir][nY].length() != 0)
-                                moves.add(new Point(nX + dir, nY));
                             break;
                     }
-                    if (dir == 1) dir = -1;
+                    if(dir == 1) dir = -1;
                     else dir = 0;
                 }
 
@@ -149,7 +156,7 @@ class Piece {
                     } else remove.add(p);
                 moves.removeAll(remove);
 
-                Game.setBoard();
+                game.setBoard();
                 for(Point p : moves) {
                     if(board[p.x][p.y].length() == 0) board[p.x][p.y].setBackgroundColor(Color.GREEN);
                     else board[p.x][p.y].setBackgroundColor(Color.RED);
@@ -166,6 +173,11 @@ class Piece {
                         board[6][y].setOnClickListener(castleListener);
                     }
                 }
+
+                if((y == 7 && black) || (y == 0 && !black)) {
+                    view.setOnClickListener(promoteListener);
+                    view.setBackgroundColor(Color.CYAN);
+                }
             }
         }
     };
@@ -178,18 +190,14 @@ class Piece {
             y = i / 8;
             moved = true;
 
-            if(Game.einstein && type > 1) {
-                if(type > 2) type--;
-                else type = 6;
-            }
-
             if(board[x][y].length() != 0) {
-                for(int j = 0; j < Game.set.length; j++) if(Game.set[j].i == i && Game.set[j].black != black) Game.set[j].type = 0;
-                Game.win = board[x][y].getText().equals("K");
+                for(int j = 0; j < game.set.length; j++)
+                    if(game.set[j].i == i && game.set[j].black != black) game.set[j].type = 0;
+                game.win = board[x][y].getText().equals("K");
             }
 
-            Game.blackTurn = !Game.blackTurn;
-            Game.setBoard();
+            if(!game.win) game.blackTurn = !game.blackTurn;
+            game.setBoard();
         }
     };
 
@@ -199,19 +207,31 @@ class Piece {
             i = view.getId();
             int nX = i % 8;
 
-            if(nX < x) for(Piece p : Game.set) if(p.i == i - 1)  {
-                p.x = 2;
-                moved = true;
-                if(Game.einstein) p.type = 4;
-            }
+            if(nX < x) for(Piece p : game.set)
+                if(p.i == i - 1) {
+                    p.x = 2;
+                    moved = true;
+                }
 
-            if(nX > x) for(Piece p : Game.set) if(p.i == i + 1)  {
-                p.x = 5;
-                moved = true;
-                if(Game.einstein) p.type = 4;
-            }
+            if(nX > x) for(Piece p : game.set)
+                if(p.i == i + 1) {
+                    p.x = 5;
+                    moved = true;
+                }
 
             moveListener.onClick(view);
+        }
+    };
+
+    private TextView.OnClickListener promoteListener = new TextView.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(type > 1) {
+                if(type > 2) type--;
+                else type = 6;
+            }
+            game.setBoard();
+            selectListener.onClick(view);
         }
     };
 }

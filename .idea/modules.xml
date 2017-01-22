@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Einstein-Chess.iml" filepath="$PROJECT_DIR$/.idea/modules/Einstein-Chess.iml" />
-      <module fileurl="file://$PROJECT_DIR$/main/src/main/main.iml" filepath="$PROJECT_DIR$/main/src/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/main/src/chess/chess.iml" filepath="$PROJECT_DIR$/main/src/chess/chess.iml" />
+      <module fileurl="file://$PROJECT_DIR$/main/src/chess/main.iml" filepath="$PROJECT_DIR$/main/src/chess/main.iml" />
     </modules>
   </component>
 </project>

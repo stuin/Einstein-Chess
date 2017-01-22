@@ -1,77 +1,63 @@
-package com.stuin.einstein_chess;
+package com.stuin.instant_chess;
 
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
+import android.os.CountDownTimer;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
 public class Game extends Activity {
-    static TextView[][] board = new TextView[8][8];
-    static Piece[] set;
-    static boolean blackTurn = false;
-    static boolean win = false;
-    static boolean einstein = false;
-
-    private static TextView textView;
-    private static String[] s;
+    TextView[][] board = new TextView[8][8];
+    Piece[] set;
+    boolean blackTurn = false;
+    boolean win = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         if(getActionBar() != null) getActionBar().hide();
-        textView = (TextView) findViewById(R.id.Turn);
-        s = getResources().getStringArray(R.array.game_point);
+
+        new CountDownTimer(100,1) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                makeBoard();
+            }
+        }.start();
     }
 
-    static void setBoard() {
-        if(blackTurn) textView.setText(s[0]);
-        else textView.setText(s[1]);
+    void setBoard() {
+        if(blackTurn) findViewById(R.id.Relative).setBackgroundColor(Color.BLACK);
+        else findViewById(R.id.Relative).setBackgroundColor(Color.WHITE);
         boolean black = true;
         for(TextView[] l : board) {
             black = !black;
             for (TextView t : l) {
                 black = !black;
-                if (black) t.setBackgroundColor(Color.BLACK);
-                else t.setBackgroundColor(Color.WHITE);
                 t.setText("");
                 t.setOnClickListener(null);
+                t.setBackgroundColor(0);
             }
-        }
-        if(win) {
-            if(blackTurn) textView.setText(s[2]);
-            else textView.setText(s[3]);
         }
         for(Piece p : set) p.showPosition(win);
     }
 
     @Override
     public void onBackPressed() {
-        einstein = false;
-        win = false;
-        blackTurn = false;
 
-        findViewById(R.id.Normal).setVisibility(View.VISIBLE);
-        findViewById(R.id.Einstein).setVisibility(View.VISIBLE);
-
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.ChessBoard);
-        gridLayout.removeAllViewsInLayout();
-
-        String s = getResources().getString(R.string.app_name);
-        TextView textView = (TextView) findViewById(R.id.Turn);
-        textView.setText(s);
     }
 
-    public void makeBoard(View view) {
-        if(view.getId() == R.id.Einstein) einstein = true;
-        findViewById(R.id.Normal).setVisibility(View.GONE);
-        findViewById(R.id.Einstein).setVisibility(View.GONE);
-
+    private void makeBoard() {
         int scale = findViewById(R.id.Relative).getHeight();
-        if(scale < findViewById(R.id.Relative).getWidth()) scale = findViewById(R.id.Relative).getWidth();
-        scale = scale / 14;
+        if(scale > findViewById(R.id.Relative).getWidth()) scale = findViewById(R.id.Relative).getWidth();
+        scale = scale / 8;
 
         boolean black = true;
         GridLayout gridLayout = (GridLayout) findViewById(R.id.ChessBoard);
@@ -82,12 +68,21 @@ public class Game extends Activity {
             black = !black;
             for(TextView t : l) {
                 t = new TextView(this);
-                t.setHeight(scale);
-                t.setWidth(scale);
                 t.setTextSize(scale / 4);
                 t.setId(i);
+                t.setWidth(scale);
+                t.setHeight(scale);
                 black = !black;
-                gridLayout.addView(t);
+
+                FrameLayout frameLayout = new FrameLayout(this);
+                frameLayout.setMinimumHeight(scale);
+                frameLayout.setMinimumWidth(scale);
+                frameLayout.addView(t);
+
+                if (black) frameLayout.setBackgroundColor(Color.BLACK);
+                else frameLayout.setBackgroundColor(Color.WHITE);
+
+                gridLayout.addView(frameLayout);
                 board[x][y] = t;
                 x++;
                 i++;
@@ -100,7 +95,7 @@ public class Game extends Activity {
         i = 0;
         set = new Piece[32];
         for(Piece p : set) {
-            p = new Piece();
+            p = new Piece(this);
             p.x = x;
             p.y = y;
             if(y < 2) p.black = true;

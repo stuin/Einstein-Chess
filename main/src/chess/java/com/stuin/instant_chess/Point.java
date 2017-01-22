@@ -1,4 +1,4 @@
-package com.stuin.einstein_chess;
+package com.stuin.instant_chess;
 
 class Point {
     int x;
