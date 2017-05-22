@@ -18,19 +18,14 @@ public class Game extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        if(getActionBar() != null) getActionBar().hide();
+        Display.load(this);
 
-        new CountDownTimer(100,1) {
+        findViewById(R.id.Relative).post(new Runnable() {
             @Override
-            public void onTick(long l) {
-
-            }
-
-            @Override
-            public void onFinish() {
+            public void run() {
                 makeBoard();
             }
-        }.start();
+        });
     }
 
     void setBoard() {

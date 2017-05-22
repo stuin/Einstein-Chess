@@ -1,6 +1,8 @@
 package com.stuin.instant_chess;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,33 +27,17 @@ class Piece {
     void showPosition(boolean end) {
         board = game.board;
         TextView t = board[x][y];
-        switch(type) {
-            case 1:
-                t.setText("K");
-                break;
-            case 2:
-                t.setText("Q");
-                break;
-            case 3:
-                t.setText("R");
-                break;
-            case 4:
-                t.setText("B");
-                break;
-            case 5:
-                t.setText("N");
-                break;
-            case 6:
-                t.setText("P");
-                break;
-        }
+        t.setText(Display.pieces[type - 1]);
+        t.setTypeface(Typeface.MONOSPACE);
+        t.setTextSize(4);
 
         if(type != 0) {
             if(black) {
-                t.setBackgroundColor(Color.DKGRAY);
+                t.setBackgroundColor(Color.GRAY);
+                t.setRotation(180);
                 t.setTextColor(Color.BLACK);
             } else {
-                t.setBackgroundColor(Color.LTGRAY);
+                t.setBackgroundColor(Color.GRAY);
                 t.setTextColor(Color.WHITE);
             }
 
@@ -76,7 +62,7 @@ class Piece {
                     int nY = y;
                     switch(type) {
                         case 1:
-                            //King
+                            //king
                             moves.add(new Point(nX + dir, nY + dir));
                             moves.add(new Point(nX - dir, nY + dir));
                             moves.add(new Point(nX + dir, nY));
@@ -84,7 +70,7 @@ class Piece {
                             break;
                         case 2:
                         case 3:
-                            //Queen & Rook
+                            //queen & rook
                             while(contains(nX, nY) && moving) {
                                 nX += dir;
                                 moves.add(new Point(nX, nY));
@@ -101,7 +87,7 @@ class Piece {
                             moving = true;
                             if(type == 3) break;
                         case 4:
-                            //Bishop
+                            //bishop
                             while(contains(nX, nY) && moving) {
                                 nX += dir;
                                 nY += dir;
@@ -120,14 +106,14 @@ class Piece {
                             moving = true;
                             break;
                         case 5:
-                            //Knight
+                            //knight
                             moves.add(new Point(x + 2 * dir, y + dir));
                             moves.add(new Point(x + 2 * dir, y - dir));
                             moves.add(new Point(x + dir, y + 2 * dir));
                             moves.add(new Point(x - dir, y + 2 * dir));
                             break;
                         case 6:
-                            //Pawn
+                            //pawn
                             if(black) nY++;
                             else nY--;
                             if(contains(x, nY)) {
