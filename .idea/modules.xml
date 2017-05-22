@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/main/src/chess/chess.iml" filepath="$PROJECT_DIR$/main/src/chess/chess.iml" />
-      <module fileurl="file://$PROJECT_DIR$/main/src/chess/main.iml" filepath="$PROJECT_DIR$/main/src/chess/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Instant-Chess.iml" filepath="$PROJECT_DIR$/Instant-Chess.iml" />
     </modules>
   </component>
 </project>
